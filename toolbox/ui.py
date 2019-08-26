@@ -35,7 +35,7 @@ colormap = np.array([
 ], dtype=np.float) / 255 
 
 default_text = \
-    "Hello друзья, я синтез построенный на tacotron."\
+    "Hello друзья, я синтез построенный на tacotron. "\
     "Шла саша по шоссе и сосала сушку"
 
    
