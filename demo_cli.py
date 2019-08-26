@@ -9,7 +9,7 @@ import librosa
 import argparse
 import torch
 import sys
-
+from g2p.train import g2p
 
 if __name__ == '__main__':
     ## Info & args
@@ -112,12 +112,11 @@ if __name__ == '__main__':
           "show how you can interface this project easily with your own. See the source code for "
           "an explanation of what is happening.\n")
     
-    print("Interactive generation loop")
     num_generated = 0
 
     # Get the reference audio filepath
-    message = "Reference voice: enter an audio filepath of a voice to be cloned(Введите путь до клонируемого файла) (mp3, " \
-              "wav, m4a, flac, ...):\n"
+    message = "Reference voice: enter an audio filepath of a voice to be cloned" \
+              "(Введите путь до клонируемого файла) (mp3, wav, m4a, flac, ...):\n"
     in_fpath = Path(input(message).replace("\"", "").replace("\'", ""))
     
     
@@ -142,9 +141,13 @@ if __name__ == '__main__':
     
     ## Generating the spectrogram
     text = input("Write a sentence (+-20 words) to be synthesized:(Введите предложение для синтеза)\n")
-    
+
     # The synthesizer works in batch, so you need to put your data in a list or numpy array
+    
     texts = [text]
+    print(texts)
+    texts = g2p(texts)
+    print(texts)
     embeds = [embed]
     # If you know what the attention layer alignments are, you can retrieve them here by
     # passing return_alignments=True
