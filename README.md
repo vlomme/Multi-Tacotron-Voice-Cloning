@@ -22,12 +22,17 @@ A GPU is mandatory, but you don't necessarily need a high tier GPU if you only w
 Download the latest [here](https://drive.google.com/uc?id=1aQBmpflbX_ePUdXTSNE4CfEL9hdG2-O8).
 
 ### Datasets
-| URL | Designation | Title | Implementation source |
-| --- | ----------- | ----- | --------------------- |
-| |  | |  |
-| |  | |  |
-| |  | |  |
-| |  | |  |
+| Name | Language | Link | Comments | My link | Comments |
+| --- | -- | ------ | ----- | ----- | ----- |
+| LibriSpeech | En | [link](http://www.openslr.org/12/) | 300 speakers, 360h clean speech | ----- | ----- |
+| VoxCeleb | En  | [link](http://www.robots.ox.ac.uk/~vgg/data/voxceleb/index.html#portfolio) | 7000 speakers, many hours bad speech | ----- | ----- |
+| M-AILABS | Ru | [link](https://www.caito.de/2019/01/the-m-ailabs-speech-dataset/) | 3 speakers, 46h clean speech| ----- | ----- |
+| open_tts, open_stt | Ru | [open_tts](https://github.com/snakers4/open_tts), [open_stt](https://github.com/snakers4/open_stt/) | many speakers, many hours bad speech | [link](https://drive.google.com/open?id=1H5vJMuCtBP6RhQ7noQwNji_yY9dCt4nU) | Почистил 4 часа речи одного спикера. Поправил анотацию, разбил на отрезки до 7 секунд |
+| Voxforge+audiobook | Ru | [link](http://voxforge.org/downloads/) | Many speaker, 25h various quality | [link](https://drive.google.com/open?id=1OjbQMW3wLgVUNUTZ2diJXubkqdlzgNNn) | Выбрал хорошие файлы. Разбил на отрезки. Добавил аудиокниг из интернета |
+| RUSLAN | Ru | [link](https://github.com/ruslan-corpus/ruslan-corpus.github.io) | One speaker, 40h good speech | [link](https://drive.google.com/open?id=1ghrL6al-FDbNkoZ_rLVzLjnGmBNWLbpG) | Перекодировал в 16кГц |
+| Mozilla | Ru | [link](https://voice.mozilla.org/ru/datasets) | 50 speaker, 30h good speech | [link](https://drive.google.com/open?id=1Mf4EGQUhlz6nmeky8qQTYFedmW0DNzjV) | Перекодировал в 16кГц, Раскидал разных пользователей по папкам |
+| Russian Single | Ru | [link](https://www.kaggle.com/bryanpark/russian-single-speaker-speech-dataset) | One speaker, 9h good speech | [link](https://drive.google.com/open?id=1ycdLrB_k2GRVePGiuNSbq30TB1_JlpNg) | Перекодировал в 16кГц |
+
 
 ### Toolbox
 You can then try the toolbox:
