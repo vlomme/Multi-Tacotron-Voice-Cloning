@@ -50,15 +50,13 @@ def preprocess_librispeech(datasets_root: Path, out_dir: Path, n_processes: int,
     print("Max mel frames length: %d" % max(int(m[4]) for m in metadata))
     print("Max audio timesteps length: %d" % max(int(m[3]) for m in metadata))
 
-def preprocess_male(datasets_root: Path, out_dir: Path, n_processes: int, 
+def preprocess_book(datasets_root: Path, out_dir: Path, n_processes: int, 
                            skip_existing: bool, hparams):
     # Gather the input directories
-    dataset_root = datasets_root.joinpath("mozilla")
-    #input_dirs = [dataset_root.joinpath("minaev"),dataset_root.joinpath("nikolaev"),dataset_root.joinpath("hajdurova")] #16Hz
-    #input_dirs = [dataset_root.joinpath("putin"),dataset_root.joinpath("RED"),dataset_root.joinpath("goblin"),dataset_root.joinpath("LJSpeech-1.1")] #22Hz
-    #input_dirs = [dataset_root.joinpath("ruslan")]	#44Hz 
-    #dataset_root = datasets_root
-    #input_dirs = [dataset_root.joinpath("ruslan")]
+    #dataset_root = datasets_root.joinpath("academ")
+    #dataset_root = datasets_root.joinpath("mozilla")
+    dataset_root = datasets_root.joinpath("book")
+    
     input_dirs = list(dataset_root.glob("*"))
 
 
@@ -104,11 +102,9 @@ def preprocess_sst(datasets_root: Path, out_dir: Path, n_processes: int,
                            skip_existing: bool, hparams):
 
     dataset_root = datasets_root
-    input_dirs = [dataset_root.joinpath("tts")]
-    #input_dirs = [dataset_root.joinpath("public_youtube700_val"),dataset_root.joinpath("russian_single"),
-    #    dataset_root.joinpath("buriy_audiobooks_2_val"),dataset_root.joinpath("public_lecture_1"),dataset_root.joinpath("public_series_1"),
-    #    dataset_root.joinpath("private_buriy_audiobooks_2"),dataset_root.joinpath("public_youtube700"),dataset_root.joinpath("public_youtube1120_hq"),dataset_root.joinpath("asr_public_stories_1"),dataset_root.joinpath("asr_public_stories_2")]
-
+    input_dirs = [dataset_root.joinpath("russian_single")]
+    
+    #input_dirs = [dataset_root.joinpath("tts")]
 
     print("\n    ".join(map(str, ["Using data from:"] + input_dirs)))
     assert all(input_dir.exists() for input_dir in input_dirs)
@@ -174,7 +170,7 @@ def preprocess_speaker_sst(speaker_dir, out_dir: Path, skip_existing: bool, hpar
                 wav = wav / np.abs(wav).max() * hparams.rescaling_max
             #futures.append(partial(process_utterance, mel_dir, linear_dir, wav_dir, basename, wav_path, text, hparams))
             basename2 = basename.strip().split('/')
-            basename3 = "tts_"+basename2[0]+"_"+basename2[1]
+            basename3 = "sl_"+basename2[0]+"_"+basename2[1]+"_"+basename2[2]
             #+"_"+basename2[2]
             #print(basename2[5])
             metadata.append(process_utterance(wav, text, out_dir,basename3 , 
@@ -206,29 +202,11 @@ def preprocess_speaker2(speaker_dir, out_dir: Path, skip_existing: bool, hparams
             texts.extend(text)
             wavs.extend(wav)
     texts = g2p(texts)
-    #print(texts)
     for i, (wav, text) in enumerate(zip(wavs, texts)):
         sub_basename = "%s_%02d" % (wav_fname, i)
         metadata.append(process_utterance(wav, text, out_dir, sub_basename, 
                                           skip_existing, hparams))
-        """
-        #print(alignments)
-        # Iterate over each entry in the alignments file
-        for wav_fname, words, end_times in alignments:
-            wav_fpath = book_dir.joinpath(wav_fname + ".flac")
-            assert wav_fpath.exists()
-            words = words.replace("\"", "").split(",")
-            end_times = list(map(float, end_times.replace("\"", "").split(",")))
-            
-            # Process each sub-utterance
-            wavs, texts = split_on_silences(wav_fpath, words, end_times, hparams)
-            texts = g2p(texts)
-            #print(texts)
-            for i, (wav, text) in enumerate(zip(wavs, texts)):
-                sub_basename = "%s_%02d" % (wav_fname, i)
-                metadata.append(process_utterance(wav, text, out_dir, sub_basename, 
-                                                  skip_existing, hparams))
-        """
+
     return [m for m in metadata if m is not None]
 
 def preprocess_speaker(speaker_dir, out_dir: Path, skip_existing: bool, hparams):
@@ -240,20 +218,15 @@ def preprocess_speaker(speaker_dir, out_dir: Path, skip_existing: bool, hparams)
         for line in f:
             parts = line.strip().split('|')
             basename = parts[0]
-            #print(basename)
-            text = parts[1]            
+            text = parts[2]            
             lines.append(basename)
             texts.append(text)
-        #print(texts)
         texts = g2p(texts)
-        #print(texts)
-        #print(lines)
         for basename, text in zip(lines,texts):
-            wav_path = os.path.join(speaker_dir, '{}'.format(basename))
+            wav_path = os.path.join(speaker_dir, '{}.wav'.format(basename))
             wav, _ = librosa.load(wav_path, hparams.sample_rate)
             if hparams.rescale:
                 wav = wav / np.abs(wav).max() * hparams.rescaling_max
-            #futures.append(partial(process_utterance, mel_dir, linear_dir, wav_dir, basename, wav_path, text, hparams))
             metadata.append(process_utterance(wav, text, out_dir, basename, 
                     skip_existing, hparams))
             index += 1
