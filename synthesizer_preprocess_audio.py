@@ -1,4 +1,4 @@
-from synthesizer.preprocess import preprocess_male
+from synthesizer.preprocess import preprocess_book
 from synthesizer.preprocess import preprocess_librispeech
 from synthesizer.preprocess import preprocess_sst
 from synthesizer.hparams import hparams
@@ -39,4 +39,4 @@ if __name__ == "__main__":
     # Preprocess the dataset
     print_args(args, parser)
     args.hparams = hparams.parse(args.hparams)
-    preprocess_male(**vars(args))    
+    preprocess_sst(**vars(args))    
