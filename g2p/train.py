@@ -6,6 +6,21 @@ import os
 import math
 import re
 
+class Hparams:
+    batch_size = 512
+    enc_maxlen = 20 # The maximum size of the graphemes word (Максимальный размер исходного слова)
+    dec_maxlen = 20 # The maximum size of the phonemes word (Максимальный размер закодированного слова)
+    num_epochs = 500 # Number of Epochs(Количество Эпох)
+    hidden_units = 128 # Hidden layers(Скрытых слоёв)
+    lr = 0.001 
+    
+    graphemes = ["<pad>", "<unk>", "</s>"] + list(".,?!abcdefghijklmnopqrstuvwxyzабвгдеёжзийклмнопрстуфхцчшщъыьэюя")
+    phonemes = ["<pad>", "<unk>", "<s>", "</s>", "оу", "ай", "ей", "ой","Оу", "Ай", "Ей", "Ой"] + list(".,?!ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя")
+    # dictionary(Словарь)
+    dicdir = "g2p/en.dic"
+    # Save Model( Сохранённая модель)
+    logdir = "g2p/log/"
+    
 def load_dict(path_dict):
     phon = []
     words = {}
@@ -328,33 +343,29 @@ def g2p(text):
             if (num_test_batches % 10000==0):
                 print(num_test_batches) 
             h = h.split("</s>")[0].strip().replace(" ", "")
-            out_phon = out_phon +" " + h
-    out_phons = out_phon.split("   ")
+            
+            out_phon = out_phon +" " + h 
+    out_phon = out_phon.replace(" ,", ",").replace(" .", ".").replace(" !", "!").replace(" ?", "?")
+    #
+    #print(out_phon)
+    out_phons = out_phon.split(" E E ")
+    out_phons[len(out_phons)-1]=out_phons[len(out_phons)-1].replace(" E E", "")
+    #out_phons2=[]
+    #for phon in out_phons:
+    #    out_phons2.append(phon.replace(" E E", ""))
     return out_phons
 
 
 
     
-class Hparams:
-    batch_size = 512
-    enc_maxlen = 20
-    dec_maxlen = 20
-    num_epochs = 500
-    hidden_units = 128
-    graphemes = ["<pad>", "<unk>", "</s>"] + list(".,?!ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя")
-    
-    phonemes = ["<pad>", "<unk>", "<s>", "</s>", "оу", "ай", "ей", "ой","Оу", "Ай", "Ей", "Ой"] + list(".,?!ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя")
-    
 
-    lr = 0.001
-    logdir = "g2p/log/"
 
 
 def tn():
     global hp
     hp = Hparams()
     global cmu
-    cmu = load_dict("g2p/en.dic")
+    cmu = load_dict(hp.dicdir)
   
         
     train_words, eval_words, test_words, train_prons, eval_prons, test_prons = prepare_data()
