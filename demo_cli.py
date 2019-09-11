@@ -30,6 +30,12 @@ if __name__ == '__main__':
         "overhead but allows to save some GPU memory for lower-end GPUs.")
     parser.add_argument("--no_sound", action="store_true", help=\
         "If True, audio won't be played.")
+    parser.add_argument("-t", "--text", 
+                        default="Hello my friends. Я многоязычный синтез построенный на tacotron. Шла саша по шоссе и сосала сушку",
+                        help="Text") 
+    parser.add_argument("-p", "--path_wav", type=Path, 
+                        default="ex.wav",
+                        help="wav file")                           
     args = parser.parse_args()
     print_args(args, parser)
     if not args.no_sound:
@@ -116,10 +122,10 @@ if __name__ == '__main__':
     num_generated = 0
 
     # Get the reference audio filepath
-    message = "Reference voice: enter an audio filepath of a voice to be cloned(Введите путь до клонируемого файла, например ex.wav) (mp3, " \
-              "wav, m4a, flac, ...):\n"
-    in_fpath = Path(input(message).replace("\"", "").replace("\'", ""))
-    
+    #message = "Reference voice: enter an audio filepath of a voice to be cloned(Введите путь до клонируемого файла, например ex.wav) (mp3, " \
+    #          "wav, m4a, flac, ...):\n"
+    #in_fpath = Path(input(message).replace("\"", "").replace("\'", ""))
+    in_fpath = args.path_wav
     
     ## Computing the embedding
     # First, we load the wav using the function that the speaker encoder provides. This is 
@@ -141,10 +147,10 @@ if __name__ == '__main__':
     
     
     ## Generating the spectrogram
-    text = input("Write a sentence (+-20 words) to be synthesized:(Введите предложение для синтеза)\n")
+    # text = input("Write a sentence (+-20 words) to be synthesized:(Введите предложение для синтеза)\n")
     
     # The synthesizer works in batch, so you need to put your data in a list or numpy array
-    texts = [text]
+    texts = [args.text]
     texts = g2p(texts)
     print(texts)
     embeds = [embed]
