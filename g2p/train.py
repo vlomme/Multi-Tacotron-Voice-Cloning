@@ -325,7 +325,11 @@ def g2p(text):
     y_hat, _, _, _ = net.eval(xs, ys)
     saver = tf.train.Saver()
     out_phon = ""
-    with tf.Session() as sess:
+    
+    config = tf.ConfigProto()
+    config.gpu_options.allow_growth = True
+    #config.gpu_options.per_process_gpu_memory_fraction = 0.5
+    with tf.Session(config=config) as sess:
         
         saver.restore(sess, ckpt); 
         sess.run(test_init_op)
